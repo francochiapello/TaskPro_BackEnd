@@ -2,10 +2,12 @@
 using TaskPro.Models.Proyectos;
 using TaskPro.Models.Shared;
 using TaskPro.Models.Usuarios;
+using TaskPro.Security;
 using TaskPro.Services;
 
 namespace TaskPro.Controllers
 {
+    [ServiceFilter(typeof(Authorization))]
     [Route("api/[controller]")]
     [ApiController]
     public class ProyectoController : Controller
@@ -58,7 +60,8 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
+                if (!HttpContext.Items.TryGetValue("id", out var userId)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.proyectoService.setId(Convert.ToInt32(userId));
 
                 if (data is null) throw new Exception("El modelo ingresado es invalido");
 
@@ -94,7 +97,8 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
+                if (!HttpContext.Items.TryGetValue("id", out var userId)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.proyectoService.setId(Convert.ToInt32(userId));
 
                 if (id == 0) throw new Exception("El dni no puede ser igual a 0");
 
@@ -135,8 +139,6 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
-
                 if (id == 0) throw new Exception("El dni no puede ser igual a 0");
 
                 this.proyectoService.delete(id);

@@ -4,6 +4,7 @@ using Microsoft.Win32;
 using TaskPro.Helpers;
 using TaskPro.Models.Shared;
 using TaskPro.Models.Usuarios;
+using TaskPro.Security;
 using TaskPro.Services;
 
 namespace TaskPro.Controllers
@@ -20,6 +21,7 @@ namespace TaskPro.Controllers
             this.tokenHelper = new TokenHelper(configuration["Jwt:Key"], "", "");
 
         }
+        [ServiceFilter(typeof(Authorization))]
         [Route("[action]")]
         [HttpGet]
         public async Task<ActionResult<List<UsuarioDTO>>> GetAll()
@@ -34,6 +36,7 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [ServiceFilter(typeof(Authorization))]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<UsuarioDTO>> GetById(int id)
         {
@@ -56,14 +59,36 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [ServiceFilter(typeof(Authorization))]
+        [HttpGet("[action]")]
+        public async Task<ActionResult<UsuarioDTO>> GetProfile()
+        {
+            try
+            {
+                if (!HttpContext.Items.TryGetValue("id", out var userId)) throw new UnknownUserException("usuario ingresado es invalido");
+
+                if (Convert.ToInt32(userId) == 0) throw new Exception("El id no puede ser igual a 0");
+
+                var result = await this.usuarioService.getOneAsync(Convert.ToInt32(userId));
+
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [ServiceFilter(typeof(Authorization))]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<UsuarioDTO>> Create([FromBody] CreateUsuarioDTO data)
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
-
                 if (data is null) throw new Exception("El modelo ingresado es invalido");
 
                 if (ModelState.IsValid)
@@ -92,14 +117,13 @@ namespace TaskPro.Controllers
             }
         }
 
+        [ServiceFilter(typeof(Authorization))]
         [HttpPut("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<UsuarioDTO>> Update(int id, [FromBody] UsuarioDTO data)
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
-
                 if (id == 0) throw new Exception("El dni no puede ser igual a 0");
 
                 if (data is null) throw new Exception("El modelo ingresado es invalido");
@@ -133,14 +157,13 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [ServiceFilter(typeof(Authorization))]
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
-
                 if (id == 0) throw new Exception("El dni no puede ser igual a 0");
 
                 this.usuarioService.deleteAsync(id);
@@ -205,7 +228,7 @@ namespace TaskPro.Controllers
                     var result = await this.usuarioService.loginAsync(login);
 
                     var token = tokenHelper.GenerateToken(result.Id.ToString());
-                    return Ok(result);
+                    return Ok(token);
                 }
                 else
                 {

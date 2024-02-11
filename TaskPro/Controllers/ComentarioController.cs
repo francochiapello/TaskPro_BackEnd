@@ -3,10 +3,12 @@ using TaskPro.Models.Comentarios;
 using TaskPro.Models.Shared;
 using TaskPro.Models.Tareas;
 using TaskPro.Persistence;
+using TaskPro.Security;
 using TaskPro.Services;
 
 namespace TaskPro.Controllers
 {
+    [ServiceFilter(typeof(Authorization))]
     [Route("api/[controller]")]
     [ApiController]
     public class ComentarioController : Controller
@@ -24,6 +26,9 @@ namespace TaskPro.Controllers
         {
             try
             {
+                if (!HttpContext.Items.TryGetValue("id", out var userId)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.comentarioService.setUsuario(Convert.ToInt32(userId));
+
                 var result = this.comentarioService.GetAll();
                 return Ok(result);
             }
@@ -37,8 +42,6 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //HttpContext.Items.TryGetValue("dni", out var userId);
-
                 if (string.IsNullOrWhiteSpace(id)) throw new Exception("El id es necesario");
 
                 var result = await this.comentarioService.getOneByIdAsync(id);
@@ -60,7 +63,8 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
+                if (!HttpContext.Items.TryGetValue("id", out var id)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.comentarioService.setUsuario(Convert.ToInt32(id));
 
                 if (data is null) throw new Exception("El modelo ingresado es invalido");
 
@@ -96,7 +100,8 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
+                if (!HttpContext.Items.TryGetValue("id", out var userId)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.comentarioService.setUsuario(Convert.ToInt32(userId));
 
                 if (string.IsNullOrWhiteSpace(id)) throw new Exception("El id es necesario");
 
@@ -137,8 +142,6 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
-
                 if (string.IsNullOrWhiteSpace(id)) throw new Exception("El id es necesario");
 
                 await this.comentarioService.deleteAsync(id);

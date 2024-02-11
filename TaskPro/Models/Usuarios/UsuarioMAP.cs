@@ -8,7 +8,9 @@ namespace TaskPro.Models.Usuarios
         {
             return new UsuarioDTO()
             {
-
+                Nombre = obj.Nombre,
+                Email = obj.Email,
+                Id = obj.Id,
             };
         }
     }

@@ -90,7 +90,7 @@ namespace TaskPro.Services.Implementation
                 }
                 else
                 {
-                    if (!exist.Contraseña.Equals(this.securityHelper.Encrypt(data.Contraseña)))
+                    if (exist.Contraseña.Equals(this.securityHelper.Encrypt(data.Contraseña)))
                     {
                         //Generar token
                         return exist.toDTO();

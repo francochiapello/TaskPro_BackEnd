@@ -3,10 +3,12 @@ using TaskPro.Models.Proyectos;
 using TaskPro.Models.Shared;
 using TaskPro.Models.Tareas;
 using TaskPro.Persistence;
+using TaskPro.Security;
 using TaskPro.Services;
 
 namespace TaskPro.Controllers
 {
+    [ServiceFilter(typeof(Authorization))]
     [Route("api/[controller]")]
     [ApiController]
     public class TareaController : Controller
@@ -74,7 +76,8 @@ namespace TaskPro.Controllers
         {
             try
             {
-                //if (!HttpContext.Items.TryGetValue("dni", out var dni)) throw new UnknownUserException("usuario ingresado invalido");
+                if (!HttpContext.Items.TryGetValue("id", out var id)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.tareaService.setUser(Convert.ToInt32(id));
 
                 if (data is null) throw new Exception("El modelo ingresado es invalido");
 
