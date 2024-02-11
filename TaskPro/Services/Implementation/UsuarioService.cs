@@ -114,7 +114,7 @@ namespace TaskPro.Services.Implementation
             try
             {
                 var exist = await this.usuarioDAO.findIfExistByEmail(data.Email);
-                if (exist is null) throw new AlreadyExistException($"El usuario con el email={data.Email}, ya existe.");
+                if (exist != null) throw new AlreadyExistException($"El usuario con el email={data.Email}, ya existe.");
 
                 var newUser = new Usuario
                 {

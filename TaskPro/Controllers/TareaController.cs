@@ -32,13 +32,12 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [Route("[action]")]
-        [HttpGet("{id:int}")]
-        public ActionResult<List<TareaDTO>> FindByProyectId(int id)
+        [HttpGet("[action]/{id:int}")]
+        public async Task<ActionResult<List<TareaDTO>>> FindByProyectId(int id)
         {
             try
             {
-                var result = this.tareaService.findByProyect(id);
+                var result = await this.tareaService.findByProyect(id);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -46,8 +45,9 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet("{id:string}")]
-        public async Task<ActionResult<TareaDTO>> GetById(string id)
+
+        [HttpGet]
+        public async Task<ActionResult<TareaDTO>> GetById([FromRoute] string id)
         {
             try
             {
@@ -104,9 +104,9 @@ namespace TaskPro.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<TareaDTO>> Update(string id, [FromBody] UpdateTareaDTO data)
+        public async Task<ActionResult<TareaDTO>> Update([FromHeader] string id, [FromBody] UpdateTareaDTO data)
         {
             try
             {
@@ -145,9 +145,9 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> Delete(string id)
+        public async Task<ActionResult<bool>> Delete([FromHeader] string id)
         {
             try
             {
