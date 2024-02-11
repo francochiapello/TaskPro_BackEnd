@@ -1,0 +1,6 @@
+@TaskPro_HostAddress = http://localhost:5078
+
+GET {{TaskPro_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
