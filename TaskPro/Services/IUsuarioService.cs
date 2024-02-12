@@ -1,4 +1,5 @@
-﻿using TaskPro.Models.Usuarios;
+﻿using TaskPro.Models.Shared;
+using TaskPro.Models.Usuarios;
 
 namespace TaskPro.Services
 {
@@ -10,6 +11,7 @@ namespace TaskPro.Services
         Task<UsuarioDTO> updateAsync(int id, UsuarioDTO data);
         void deleteAsync(int id);
         Task<List<UsuarioDTO>> getAllAsync();
+        Task<List<simpleList>> getSimpleList();
         Task<UsuarioDTO> getOneAsync(int id);
     }
 }

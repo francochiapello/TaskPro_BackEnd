@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskPro.Data;
 using TaskPro.Persistence;
+using TaskPro.Security;
 using TaskPro.Services;
 using TaskPro.Services.Implementation;
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<Authorization>();
 builder.Services.AddScoped<IUsuarioService,UsuarioService>();
 builder.Services.AddScoped<IProyectoService,ProyectoService>();
 builder.Services.AddScoped<ITareaService, TareaService>();

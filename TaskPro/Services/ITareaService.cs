@@ -5,7 +5,7 @@ namespace TaskPro.Services
 {
     public interface ITareaService
     {
-        List<TareaDTO> GetAll();
+        Task<List<AsignedTareaDTO>> GetAll();
         Task<List<TareaDTO>> findByProyect(int proyectId); 
         Task<TareaDTO> getOneByIdAsync(string id);
         Task<TareaDTO> createAsync(CreateTareaDTO data);

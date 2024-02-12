@@ -22,11 +22,11 @@ namespace TaskPro.Controllers
 
         [Route("[action]")]
         [HttpGet]
-        public ActionResult<List<TareaDTO>> GetAll()
+        public async Task<ActionResult<List<AsignedTareaDTO>>> GetAll()
         {
             try
             {
-                var result = this.tareaService.GetAll();
+                var result = await this.tareaService.GetAll();
                 return Ok(result);
             }
             catch (Exception ex)
@@ -48,8 +48,8 @@ namespace TaskPro.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<ActionResult<TareaDTO>> GetById([FromRoute] string id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TareaDTO>> GetById(string id)
         {
             try
             {
@@ -107,9 +107,9 @@ namespace TaskPro.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<TareaDTO>> Update([FromHeader] string id, [FromBody] UpdateTareaDTO data)
+        public async Task<ActionResult<TareaDTO>> Update(string id, [FromBody] UpdateTareaDTO data)
         {
             try
             {
@@ -148,9 +148,9 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> Delete([FromHeader] string id)
+        public async Task<ActionResult<bool>> Delete(string id)
         {
             try
             {

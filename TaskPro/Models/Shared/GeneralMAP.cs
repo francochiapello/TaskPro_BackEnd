@@ -47,5 +47,13 @@ namespace TaskPro.Models.Shared
                 return usuario;
             }
         }
+        public static Proyecto? getProyecto(this int id)
+        {
+            using (DbgrpContext db1 = new DbgrpContext())
+            {
+                var proyecto = db1.Proyectos.Where(x => x.Id.Equals(id)).FirstOrDefault();
+                return proyecto;
+            }
+        }
     }
 }

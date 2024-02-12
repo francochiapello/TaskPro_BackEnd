@@ -1,4 +1,5 @@
 ﻿using TaskPro.Models.Comentarios;
+using TaskPro.Models.Proyectos;
 
 namespace TaskPro.Models.Tareas
 {
@@ -9,10 +10,15 @@ namespace TaskPro.Models.Tareas
         public string Descripcion { get; set; }
         public int ProyectoId { get; set; }
         public int AsignadoA { get; set; }
+        public string AsignadoNombre { get; set; }
         public string Estado { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public List<ComentarioDTO> Comentarios { get; set; }
+    }
+    public class AsignedTareaDTO : TareaDTO
+    {
+        public ProyectoDTO Proyecto { get; set; }
     }
     public class CreateTareaDTO
     {

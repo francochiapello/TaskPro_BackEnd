@@ -33,6 +33,19 @@ namespace TaskPro.Persistence
                 throw new DataBaseException(ex.Message);
             }
         }
+        public async Task<List<Proyecto>> getAllByUserId(int id)
+        {
+            try
+            {
+                var result = await this.db.Usuarios.Where(x => x.Id == id).Include(x => x.Proyectos).Select(x => x.Proyectos.ToList()).FirstOrDefaultAsync();
+
+                return result is null ? new List<Proyecto>() : result;
+            }
+            catch (Exception ex)
+            {
+                throw new DataBaseException(ex.Message);
+            }
+        }
         public async Task<Proyecto?> findIfExistByUser(int id,string nombre)
         {
             try
@@ -70,13 +83,9 @@ namespace TaskPro.Persistence
                 using (DbgrpContext db1 = new DbgrpContext())
                 {
 
-                    var result = await db1.Proyectos.Where(x => x.Id == data.Id).FirstOrDefaultAsync();
-                    if (result is not null)
-                    {
-                        db1.Update<Proyecto>(data);
+                    db1.Entry<Proyecto>(data).State = EntityState.Modified;
 
-                        await db1.SaveChangesAsync();
-                    }
+                    await db1.SaveChangesAsync();
 
                     return data;
                 }
@@ -86,19 +95,19 @@ namespace TaskPro.Persistence
                 throw new DataBaseException(ex.Message);
             }
         }
-        public void remove(int id)
+        public async void remove(int id)
         {
             try
             {
                 using (DbgrpContext db1 = new DbgrpContext())
                 {
-                    var result = db1.Usuarios.Where(x => x.Id == id).FirstOrDefault();
+                    var result = db1.Proyectos.Where(x => x.Id == id).FirstOrDefault();
                     if (result is not null)
                     {
-                        db1.Usuarios.Attach(result);
-                        db1.Usuarios.Remove(result);
+                        db1.Proyectos.Attach(result);
+                        db1.Proyectos.Remove(result);
 
-                        db1.SaveChanges();
+                        await db1.SaveChangesAsync();
                     }
                 }
             }

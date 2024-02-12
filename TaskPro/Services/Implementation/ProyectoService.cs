@@ -14,7 +14,7 @@ namespace TaskPro.Services.Implementation
         {
             try
             {
-                var usuarioLogged = await this.getOneByIdAsync(this.userLogged);
+                var usuarioLogged = await this.usuarioDAO.getOneById(this.userLogged);
                 if(usuarioLogged is null) throw new NotFoundException($"El usuario con el id={this.userLogged}, no existe.");
 
                 var exist = await this.proyectoDAO.findIfExistByUser(userLogged, data.Nombre);
@@ -55,7 +55,7 @@ namespace TaskPro.Services.Implementation
         {
             try
             {
-                var result = await this.proyectoDAO.getAll();
+                var result = await this.proyectoDAO.getAllByUserId(this.userLogged);
 
                 return result.Select(x => x.toDTO()).ToList();
             }

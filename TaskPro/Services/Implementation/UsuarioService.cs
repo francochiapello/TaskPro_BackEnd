@@ -79,6 +79,24 @@ namespace TaskPro.Services.Implementation
             }
         }
 
+        public async Task<List<simpleList>> getSimpleList()
+        {
+            try
+            {
+                var result = await this.usuarioDAO.getAllUsuarios();
+
+                return result.Select(x => new simpleList
+                {
+                    id = x.Id,
+                    label = x.Nombre
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<UsuarioDTO> loginAsync(LoginDTO data)
         {
             try

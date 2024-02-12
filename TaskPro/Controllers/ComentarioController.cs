@@ -37,8 +37,8 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpGet]
-        public async Task<ActionResult<ComentarioDTO>> GetById([FromHeader] string id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ComentarioDTO>> GetById(string id)
         {
             try
             {
@@ -94,9 +94,9 @@ namespace TaskPro.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ComentarioDTO>> Update([FromHeader] string id, [FromBody] UpdateComentarioDTO data)
+        public async Task<ActionResult<ComentarioDTO>> Update(string id, [FromBody] UpdateComentarioDTO data)
         {
             try
             {
@@ -136,9 +136,9 @@ namespace TaskPro.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<bool>> Delete([FromHeader] string id)
+        public async Task<ActionResult<bool>> Delete(string id)
         {
             try
             {

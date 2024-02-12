@@ -24,6 +24,9 @@ namespace TaskPro.Controllers
         {
             try
             {
+                if (!HttpContext.Items.TryGetValue("id", out var userId)) throw new UnknownUserException("usuario ingresado es invalido");
+                this.proyectoService.setId(Convert.ToInt32(userId));
+
                 var result = await this.proyectoService.getAllAsync();
                 return Ok(result);
             }

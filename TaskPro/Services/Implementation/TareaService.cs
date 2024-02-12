@@ -1,5 +1,6 @@
 ﻿using TaskPro.Data;
 using TaskPro.Models.Comentarios;
+using TaskPro.Models.Proyectos;
 using TaskPro.Models.Shared;
 using TaskPro.Models.Tareas;
 using TaskPro.Persistence;
@@ -22,13 +23,23 @@ namespace TaskPro.Services.Implementation
         {
             this.userLogged = userLogged;
         }
-        public List<TareaDTO> GetAll()
+        public async Task<List<AsignedTareaDTO>> GetAll()
         {
             try
             {
-                var result = this.tareaDAO.getAll();
+                var tareas = await this.tareaDAO.getAll();
 
-                return result.Select(x => x.toDTO()).ToList();
+                var task = tareas.Select(async (x) =>
+                {
+                    var comentarios = await this.comentarioDAO.findByTareaId(x.Id);
+                    var comentariosDTO = comentarios.Select(c => c.toDTO()).ToList();
+
+                    return x.toDTOwithProyect(comentariosDTO);
+                });
+
+                var result = await Task.WhenAll(task);
+
+                return result.ToList();
             }
             catch (Exception ex)
             {
@@ -65,7 +76,10 @@ namespace TaskPro.Services.Implementation
                 var result = await this.tareaDAO.getOneById(id);
                 if(result is null) throw new NotFoundException($"La tarea con el id={id}, no existe.");
 
-                return result.toDTO();
+                var comentarios = await this.comentarioDAO.findByTareaId(id);
+                var comentariosDTO = comentarios.Select(c => c.toDTO()).ToList();
+
+                return result.toDTO(comentariosDTO);
             }
             catch (Exception ex)
             {

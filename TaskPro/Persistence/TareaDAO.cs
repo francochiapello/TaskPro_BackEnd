@@ -15,11 +15,11 @@ namespace TaskPro.Persistence
             this._Tareas = database.GetCollection<Tareas>("Tareas");
         }
 
-        public List<Tareas> getAll()
+        public async Task<List<Tareas>> getAll()
         {
             try
             {
-                return this._Tareas.Find(d => true).ToList();
+                return await this._Tareas.Find(d => true).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace TaskPro.Persistence
         {
             try
             {
-                var result = await this._Tareas.Find(x => x.Nombre.ToUpper().Equals(nombre.ToUpper()) && x.ProyectoId == proyectId).SingleAsync();
+                var result = await this._Tareas.Find(x => x.Nombre.ToUpper().Equals(nombre.ToUpper()) && x.ProyectoId == proyectId).SingleOrDefaultAsync();
 
                 return result;
             }

@@ -37,6 +37,21 @@ namespace TaskPro.Controllers
             }
         }
         [ServiceFilter(typeof(Authorization))]
+        [Route("[action]")]
+        [HttpGet]
+        public async Task<ActionResult<List<simpleList>>> GetAllSimpleList()
+        {
+            try
+            {
+                var result = await this.usuarioService.getSimpleList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [ServiceFilter(typeof(Authorization))]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<UsuarioDTO>> GetById(int id)
         {
